@@ -23,9 +23,12 @@ def generate_file_links():
     if not repo_url:
         return
     
+    # Convert github.com URL to raw.githubusercontent.com
+    raw_base_url = repo_url.replace('https://github.com', 'https://raw.githubusercontent.com')
+    
     with open('file_links.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(['Folder', 'Filename', 'Future Public URL'])
+        writer.writerow(['Folder', 'Filename', 'Public URL'])
         
         # Walk through all directories
         for root, dirs, files in os.walk('.'):
@@ -41,8 +44,8 @@ def generate_file_links():
                 if folder == '.':
                     folder = 'root'
                 
-                # Generate the future public URL
-                file_url = f"{repo_url}/blob/main/{relative_path.replace(' ', '%20')}"
+                # Generate the raw GitHub URL
+                file_url = f"{raw_base_url}/refs/heads/main/{relative_path.replace(' ', '%20')}"
                 
                 writer.writerow([folder, file, file_url])
                 print(f"Added: {relative_path}")
